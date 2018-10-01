@@ -29,13 +29,13 @@ namespace NServiceBus
                 }
                 if (state.SqlTransaction != null)
                 {
-                    return new MessageAttachmentsFromSqlTransaction(state.SqlTransaction, context.MessageId, state.Persister);
+                    return new MessageAttachmentsFromDbTransaction(state.SqlTransaction, context.MessageId, state.Persister);
                 }
                 if (state.SqlConnection != null)
                 {
-                    return new MessageAttachmentsFromSqlConnection(state.SqlConnection, context.MessageId, state.Persister);
+                    return new MessageAttachmentsFromDbConnection(state.SqlConnection, context.MessageId, state.Persister);
                 }
-                return new MessageAttachmentsFromSqlFactory(state.GetConnection, context.MessageId, state.Persister);
+                return new MessageAttachmentsFromConnectionFactory(state.GetConnection, context.MessageId, state.Persister);
             }
             throw new Exception($"Attachments used when not enabled. For example IMessageHandlerContext.{nameof(Attachments)}() was used but Attachments was not enabled via EndpointConfiguration.{nameof(SqlAttachmentsExtensions.EnableAttachments)}().");
         }
