@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
-using System.Data.SqlClient;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,13 +19,13 @@ namespace NServiceBus.Attachments.Sql
         /// Saves <paramref name="stream"/> as an attachment.
         /// </summary>
         /// <exception cref="TaskCanceledException">If <paramref name="cancellation"/> is <see cref="CancellationToken.IsCancellationRequested"/>.</exception>
-        Task SaveStream(SqlConnection connection, SqlTransaction transaction, string messageId, string name, DateTime expiry, Stream stream, IReadOnlyDictionary<string, string> metadata, CancellationToken cancellation = default);
+        Task SaveStream(DbConnection connection, DbTransaction transaction, string messageId, string name, DateTime expiry, Stream stream, IReadOnlyDictionary<string, string> metadata, CancellationToken cancellation = default);
 
         /// <summary>
         /// Saves <paramref name="bytes"/> as an attachment.
         /// </summary>
         /// <exception cref="TaskCanceledException">If <paramref name="cancellation"/> is <see cref="CancellationToken.IsCancellationRequested"/>.</exception>
-        Task SaveBytes(SqlConnection connection, SqlTransaction transaction, string messageId, string name, DateTime expiry, byte[] bytes, IReadOnlyDictionary<string, string> metadata, CancellationToken cancellation = default);
+        Task SaveBytes(DbConnection connection, DbTransaction transaction, string messageId, string name, DateTime expiry, byte[] bytes, IReadOnlyDictionary<string, string> metadata, CancellationToken cancellation = default);
 
         /// <summary>
         /// Reads the <see cref="AttachmentInfo"/> for all attachments of a specific message.
@@ -66,12 +65,12 @@ namespace NServiceBus.Attachments.Sql
         /// <summary>
         /// Copies an attachment to <paramref name="target"/>.
         /// </summary>
-        Task CopyTo(string messageId, string name, SqlConnection connection, SqlTransaction transaction, Stream target, CancellationToken cancellation = default);
+        Task CopyTo(string messageId, string name, DbConnection connection, DbTransaction transaction, Stream target, CancellationToken cancellation = default);
 
         /// <summary>
         /// Reads a byte array for an attachment.
         /// </summary>
-        Task<AttachmentBytes> GetBytes(string messageId, string name, SqlConnection connection, SqlTransaction transaction, CancellationToken cancellation = default);
+        Task<AttachmentBytes> GetBytes(string messageId, string name, DbConnection connection, DbTransaction transaction, CancellationToken cancellation = default);
 
         /// <summary>
         /// Returns an open stream pointing to an attachment.
@@ -81,11 +80,11 @@ namespace NServiceBus.Attachments.Sql
         /// <summary>
         /// Processes all attachments for <paramref name="messageId"/> by passing them to <paramref name="action"/>.
         /// </summary>
-        Task ProcessStreams(string messageId, SqlConnection connection, SqlTransaction transaction, Func<string, AttachmentStream, Task> action, CancellationToken cancellation = default);
+        Task ProcessStreams(string messageId, DbConnection connection, DbTransaction transaction, Func<string, AttachmentStream, Task> action, CancellationToken cancellation = default);
 
         /// <summary>
         /// Processes an attachment by passing it to <paramref name="action"/>.
         /// </summary>
-        Task ProcessStream(string messageId, string name, SqlConnection connection, SqlTransaction transaction, Func<AttachmentStream, Task> action, CancellationToken cancellation = default);
+        Task ProcessStream(string messageId, string name, DbConnection connection, DbTransaction transaction, Func<AttachmentStream, Task> action, CancellationToken cancellation = default);
     }
 }
