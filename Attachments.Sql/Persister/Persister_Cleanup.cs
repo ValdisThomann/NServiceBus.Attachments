@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Data;
+using System.Data.Common;
 using System.Data.SqlClient;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,14 +15,17 @@ namespace NServiceBus.Attachments.Sql
         /// <summary>
         /// Deletes attachments older than <paramref name="dateTime"/>.
         /// </summary>
-        public virtual async Task CleanupItemsOlderThan(SqlConnection connection, SqlTransaction transaction, DateTime dateTime, CancellationToken cancellation = default)
+        public virtual async Task CleanupItemsOlderThan(DbConnection connection, DbTransaction transaction, DateTime dateTime, CancellationToken cancellation = default)
         {
             Guard.AgainstNull(connection, nameof(connection));
             using (var command = connection.CreateCommand())
             {
                 command.Transaction = transaction;
                 command.CommandText = $"delete from {table} where expiry < @date";
-                command.AddParameter("date", dateTime);
+                var dateParameter = command.CreateParameter();
+                dateParameter.ParameterName = "date";
+                dateParameter.Value = dateTime;
+                command.Parameters.Add(dateParameter);
                 await command.ExecuteNonQueryAsync(cancellation).ConfigureAwait(false);
             }
         }
