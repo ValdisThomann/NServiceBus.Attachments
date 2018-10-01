@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
@@ -108,12 +109,12 @@ class SendBehavior :
         }
     }
 
-    Task ProcessOutgoing(Dictionary<string, Outgoing> attachments, TimeSpan? timeToBeReceived, SqlConnection connection, SqlTransaction transaction, string messageId)
+    Task ProcessOutgoing(Dictionary<string, Outgoing> attachments, TimeSpan? timeToBeReceived, DbConnection connection, DbTransaction transaction, string messageId)
     {
         return Task.WhenAll(attachments.Select(pair => ProcessAttachment(timeToBeReceived, connection, transaction, messageId, pair.Value, pair.Key)));
     }
 
-    async Task ProcessStream(SqlConnection connection, SqlTransaction transaction, string messageId, string name, DateTime expiry, Stream stream, IReadOnlyDictionary<string, string> metadata)
+    async Task ProcessStream(DbConnection connection, DbTransaction transaction, string messageId, string name, DateTime expiry, Stream stream, IReadOnlyDictionary<string, string> metadata)
     {
         using (stream)
         {
@@ -122,7 +123,7 @@ class SendBehavior :
         }
     }
 
-    async Task ProcessAttachment(TimeSpan? timeToBeReceived, SqlConnection connection, SqlTransaction transaction, string messageId, Outgoing outgoing, string name)
+    async Task ProcessAttachment(TimeSpan? timeToBeReceived, DbConnection connection, DbTransaction transaction, string messageId, Outgoing outgoing, string name)
     {
         var outgoingStreamTimeToKeep = outgoing.TimeToKeep ?? endpointTimeToKeep;
         var timeToKeep = outgoingStreamTimeToKeep(timeToBeReceived);
@@ -137,7 +138,7 @@ class SendBehavior :
         }
     }
 
-    async Task Process(SqlConnection connection, SqlTransaction transaction, string messageId, Outgoing outgoing, string name, DateTime expiry)
+    async Task Process(DbConnection connection, DbTransaction transaction, string messageId, Outgoing outgoing, string name, DateTime expiry)
     {
         if (outgoing.AsyncStreamFactory != null)
         {

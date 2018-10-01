@@ -26,7 +26,7 @@ class Program
         await endpoint.Stop();
     }
 
-    static async Task SendMessage(IEndpointInstance endpoint)
+    static async Task SendMessage(IMessageSession endpoint)
     {
         var sendOptions = new SendOptions();
         sendOptions.RouteToThisEndpoint();

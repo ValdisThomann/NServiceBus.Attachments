@@ -20,7 +20,7 @@ public class OutgoingWhenNotEnabledTests
         endpoint.Stop().Wait();
     }
 
-    static async Task SendStartMessageWithAttachment(IEndpointInstance endpoint)
+    static async Task SendStartMessageWithAttachment(IMessageSession endpoint)
     {
         var sendOptions = new SendOptions();
         sendOptions.RouteToThisEndpoint();

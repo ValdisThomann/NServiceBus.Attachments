@@ -24,7 +24,7 @@ class SendBehavior :
         await next().ConfigureAwait(false);
     }
 
-    Task ProcessStreams(IOutgoingLogicalMessageContext context)
+    Task ProcessStreams(IOutgoingContext context)
     {
         var extensions = context.Extensions;
         if (!extensions.TryGet<IOutgoingAttachments>(out var attachments))

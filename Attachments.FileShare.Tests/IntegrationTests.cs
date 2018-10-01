@@ -25,7 +25,7 @@ public class IntegrationTests
         await endpoint.Stop();
     }
 
-    static Task SendStartMessage(IEndpointInstance endpoint)
+    static Task SendStartMessage(IMessageSession endpoint)
     {
         var sendOptions = new SendOptions();
         sendOptions.RouteToThisEndpoint();

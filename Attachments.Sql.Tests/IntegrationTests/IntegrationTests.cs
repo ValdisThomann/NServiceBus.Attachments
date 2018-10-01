@@ -161,7 +161,7 @@ public class IntegrationTests
         }
     }
 
-    static Task SendStartMessage(IEndpointInstance endpoint)
+    static Task SendStartMessage(IMessageSession endpoint)
     {
         var sendOptions = new SendOptions();
         sendOptions.RouteToThisEndpoint();

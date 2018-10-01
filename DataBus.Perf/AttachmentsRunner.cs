@@ -31,7 +31,7 @@ public class AttachmentsRunner
         countdownEvent.Dispose();
     }
 
-    static Task SendStartMessages(IEndpointInstance endpoint)
+    static Task SendStartMessages(IMessageSession endpoint)
     {
         var tasks = new List<Task>();
         for (var i = 0; i < iterations; i++)

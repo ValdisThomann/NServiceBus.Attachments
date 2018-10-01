@@ -2,6 +2,7 @@
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 using System.Transactions;
+using NServiceBus;
 using NServiceBus.Attachments.Sql;
 using NServiceBus.Pipeline;
 using NServiceBus.Transport;
@@ -31,7 +32,7 @@ class ReceiveBehavior :
         return next();
     }
 
-    SqlAttachmentState BuildState(IInvokeHandlerContext context)
+    SqlAttachmentState BuildState(IMessageHandlerContext context)
     {
         if (useSynchronizedStorage)
         {
