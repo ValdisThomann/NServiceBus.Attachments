@@ -28,29 +28,29 @@ namespace NServiceBus.Attachments.Sql
         public static async Task CreateTable(string connection, Table table, CancellationToken cancellation = default)
         {
             Guard.AgainstNullOrEmpty(connection, nameof(connection));
-            using (var sqlConnection = new SqlConnection(connection))
+            using (var dbConnection = new SqlConnection(connection))
             {
-                await sqlConnection.OpenAsync(cancellation).ConfigureAwait(false);
-                await CreateTable(sqlConnection, table, cancellation).ConfigureAwait(false);
+                await dbConnection.OpenAsync(cancellation).ConfigureAwait(false);
+                await CreateTable(dbConnection, table, cancellation).ConfigureAwait(false);
             }
         }
 
         /// <summary>
         /// Create the attachments storage table.
         /// </summary>
-        public static Task CreateTable(DbConnection connection, CancellationToken cancellation = default)
+        public static Task CreateTable(DbConnection dbConnection, CancellationToken cancellation = default)
         {
-            return CreateTable(connection, "MessageAttachments", cancellation);
+            return CreateTable(dbConnection, "MessageAttachments", cancellation);
         }
 
         /// <summary>
         /// Create the attachments storage table.
         /// </summary>
-        public static async Task CreateTable(DbConnection connection, Table table, CancellationToken cancellation = default)
+        public static async Task CreateTable(DbConnection dbConnection, Table table, CancellationToken cancellation = default)
         {
-            Guard.AgainstNull(connection, nameof(connection));
+            Guard.AgainstNull(dbConnection, nameof(dbConnection));
             Guard.AgainstNull(table, nameof(table));
-            using (var command = connection.CreateCommand())
+            using (var command = dbConnection.CreateCommand())
             {
                 command.CommandText = GetTableSql();
                 command.AddParameter("schema", table.Schema);

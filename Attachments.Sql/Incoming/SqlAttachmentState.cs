@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Data.Common;
-using System.Data.SqlClient;
 using System.Threading.Tasks;
 using System.Transactions;
 using NServiceBus.Attachments.Sql;
@@ -10,18 +9,18 @@ class SqlAttachmentState
     Func<Task<DbConnection>> connectionFactory;
     public IPersister Persister;
     public Transaction Transaction;
-    public SqlTransaction SqlTransaction;
-    public SqlConnection SqlConnection;
+    public DbTransaction DbTransaction;
+    public DbConnection DbConnection;
 
-    public SqlAttachmentState(SqlConnection sqlConnection, IPersister persister)
+    public SqlAttachmentState(DbConnection dbConnection, IPersister persister)
     {
-        SqlConnection = sqlConnection;
+        DbConnection = dbConnection;
         Persister = persister;
     }
 
-    public SqlAttachmentState(SqlTransaction sqlTransaction, IPersister persister)
+    public SqlAttachmentState(DbTransaction dbTransaction, IPersister persister)
     {
-        SqlTransaction = sqlTransaction;
+        DbTransaction = dbTransaction;
         Persister = persister;
     }
 
