@@ -42,7 +42,7 @@ static class SqlExtensions
 
     // The reader needs to be executed with SequentialAccess to enable network streaming
     // Otherwise ReadAsync will buffer the entire BLOB in memory which can cause scalability issues or OutOfMemoryExceptions
-    public static Task<SqlDataReader> ExecuteSequentialReader(this SqlCommand command, CancellationToken cancellation = default)
+    public static Task<DbDataReader> ExecuteSequentialReader(this DbCommand command, CancellationToken cancellation = default)
     {
         return command.ExecuteReaderAsync(CommandBehavior.SequentialAccess, cancellation);
     }

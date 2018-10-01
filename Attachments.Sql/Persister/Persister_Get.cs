@@ -44,10 +44,9 @@ namespace NServiceBus.Attachments.Sql
             Guard.AgainstNullOrEmpty(name, nameof(name));
             Guard.AgainstNull(connection, nameof(connection));
             SqlCommand command = null;
-            SqlDataReader reader = null;
+            DbDataReader reader = null;
             try
             {
-
                 command = CreateGetDataCommand(messageId, name, connection, transaction);
                 reader = await command.ExecuteSequentialReader(cancellation).ConfigureAwait(false);
                 if (!await reader.ReadAsync(cancellation).ConfigureAwait(false))
