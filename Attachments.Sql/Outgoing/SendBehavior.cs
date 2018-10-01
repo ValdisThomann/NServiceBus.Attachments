@@ -72,21 +72,21 @@ class SendBehavior :
                 return;
             }
 
-            using (var sqlConnection = await state.GetConnection().ConfigureAwait(false))
+            using (var dbConnection = await state.GetConnection().ConfigureAwait(false))
             {
-                await ProcessOutgoing(inner, timeToBeReceived, sqlConnection, null, context.MessageId)
+                await ProcessOutgoing(inner, timeToBeReceived, dbConnection, null, context.MessageId)
                     .ConfigureAwait(false);
             }
 
             return;
         }
 
-        using (var connection = await connectionFactory().ConfigureAwait(false))
+        using (var dbConnection = await connectionFactory().ConfigureAwait(false))
         {
             //TODO: should this be done ?
             if (context.TryReadTransaction(out var transaction))
             {
-                connection.EnlistTransaction(transaction);
+                dbConnection.EnlistTransaction(transaction);
             }
 
             if (inner.Count == 1)
@@ -94,14 +94,14 @@ class SendBehavior :
                 var attachment = inner.Single();
                 var name = attachment.Key;
                 var outgoing = attachment.Value;
-                await ProcessAttachment(timeToBeReceived, connection, null, context.MessageId, outgoing, name)
+                await ProcessAttachment(timeToBeReceived, dbConnection, null, context.MessageId, outgoing, name)
                     .ConfigureAwait(false);
                 return;
             }
 
-            using (var sqlTransaction = connection.BeginTransaction())
+            using (var sqlTransaction = dbConnection.BeginTransaction())
             {
-                await ProcessOutgoing(inner, timeToBeReceived, connection, sqlTransaction, context.MessageId)
+                await ProcessOutgoing(inner, timeToBeReceived, dbConnection, sqlTransaction, context.MessageId)
                     .ConfigureAwait(false);
                 sqlTransaction.Commit();
             }
