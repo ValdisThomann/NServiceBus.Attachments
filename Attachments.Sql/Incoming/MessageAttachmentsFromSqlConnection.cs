@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Data.SqlClient;
+using System.Data.Common;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -7,11 +7,11 @@ using NServiceBus.Attachments.Sql;
 
 class MessageAttachmentsFromSqlConnection : IMessageAttachments
 {
-    SqlConnection connection;
+    DbConnection connection;
     string messageId;
     IPersister persister;
 
-    public MessageAttachmentsFromSqlConnection(SqlConnection connection, string messageId, IPersister persister)
+    public MessageAttachmentsFromSqlConnection(DbConnection connection, string messageId, IPersister persister)
     {
         this.connection = connection;
         this.messageId = messageId;
