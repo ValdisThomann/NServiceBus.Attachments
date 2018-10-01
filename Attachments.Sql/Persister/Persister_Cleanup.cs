@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Data.Common;
 using System.Threading;
 using System.Threading.Tasks;
@@ -23,6 +24,7 @@ namespace NServiceBus.Attachments.Sql
                 var dateParameter = command.CreateParameter();
                 dateParameter.ParameterName = "date";
                 dateParameter.Value = dateTime;
+                dateParameter.DbType = DbType.DateTime;
                 command.Parameters.Add(dateParameter);
                 await command.ExecuteNonQueryAsync(cancellation).ConfigureAwait(false);
             }

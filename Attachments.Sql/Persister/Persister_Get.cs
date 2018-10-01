@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Threading;
@@ -38,12 +39,12 @@ namespace NServiceBus.Attachments.Sql
         /// <summary>
         /// Returns an open stream pointing to an attachment.
         /// </summary>
-        public virtual async Task<AttachmentStream> GetStream(string messageId, string name, SqlConnection connection, SqlTransaction transaction, bool disposeConnectionOnStreamDispose, CancellationToken cancellation)
+        public virtual async Task<AttachmentStream> GetStream(string messageId, string name, DbConnection connection, DbTransaction transaction, bool disposeConnectionOnStreamDispose, CancellationToken cancellation)
         {
             Guard.AgainstNullOrEmpty(messageId, nameof(messageId));
             Guard.AgainstNullOrEmpty(name, nameof(name));
             Guard.AgainstNull(connection, nameof(connection));
-            SqlCommand command = null;
+            DbCommand command = null;
             DbDataReader reader = null;
             try
             {
@@ -79,7 +80,7 @@ namespace NServiceBus.Attachments.Sql
             return new AttachmentStream(sqlStream, length, metadata, command, reader);
         }
 
-        SqlCommand CreateGetDataCommand(string messageId, string name, SqlConnection connection, SqlTransaction transaction)
+        DbCommand CreateGetDataCommand(string messageId, string name, DbConnection connection, DbTransaction transaction)
         {
             var command = connection.CreateCommand();
             command.Transaction = transaction;
@@ -92,8 +93,16 @@ from {table}
 where
     NameLower = lower(@Name) and
     MessageIdLower = lower(@MessageId)";
-            command.AddParameter("Name", name);
-            command.AddParameter("MessageId", messageId);
+            var nameParameter = command.CreateParameter();
+            nameParameter.ParameterName = "Name";
+            nameParameter.Value = name;
+            nameParameter.DbType = DbType.String;
+            command.Parameters.Add(nameParameter);
+            var messageIdParameter = command.CreateParameter();
+            messageIdParameter.ParameterName = "MessageId";
+            messageIdParameter.Value = messageId;
+            messageIdParameter.DbType = DbType.String;
+            command.Parameters.Add(messageIdParameter);
             return command;
         }
 
