@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Data;
 using System.Data.Common;
-using System.Data.SqlClient;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -33,7 +31,7 @@ namespace NServiceBus.Attachments.Sql
         /// <summary>
         /// Deletes all items.
         /// </summary>
-        public virtual async Task PurgeItems(SqlConnection connection, SqlTransaction transaction, CancellationToken cancellation = default)
+        public virtual async Task PurgeItems(DbConnection connection, DbTransaction transaction, CancellationToken cancellation = default)
         {
             Guard.AgainstNull(connection, nameof(connection));
             using (var command = connection.CreateCommand())

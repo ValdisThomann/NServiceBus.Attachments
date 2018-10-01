@@ -61,7 +61,7 @@ namespace NServiceBus.Attachments.Sql
         /// <summary>
         /// Deletes all items.
         /// </summary>
-        Task PurgeItems(SqlConnection connection, SqlTransaction transaction, CancellationToken cancellation = default);
+        Task PurgeItems(DbConnection connection, DbTransaction transaction, CancellationToken cancellation = default);
 
         /// <summary>
         /// Copies an attachment to <paramref name="target"/>.
