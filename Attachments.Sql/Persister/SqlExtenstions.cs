@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Data;
+using System.Data.Common;
 using System.Data.SqlClient;
 using System.Threading;
 using System.Threading.Tasks;
 
 static class SqlExtensions
 {
-    public static string GetStringOrNull(this SqlDataReader dataReader, int index)
+    public static string GetStringOrNull(this DbDataReader dataReader, int index)
     {
         if (dataReader.IsDBNull(index))
         {

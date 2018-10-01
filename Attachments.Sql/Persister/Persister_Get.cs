@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Common;
 using System.Data.SqlClient;
 using System.Threading;
 using System.Threading.Tasks;
@@ -66,7 +67,7 @@ namespace NServiceBus.Attachments.Sql
             }
         }
 
-        static AttachmentStream InnerGetStream(SqlDataReader reader, SqlCommand command, bool disposeConnection)
+        static AttachmentStream InnerGetStream(DbDataReader reader, DbCommand command, bool disposeConnection)
         {
             var length = reader.GetInt64(0);
             var metadataString = reader.GetStringOrNull(1);

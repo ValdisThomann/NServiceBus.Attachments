@@ -120,7 +120,6 @@ public class IntegrationTests
         await SendStartMessage(endpoint);
 
         var timeout = TimeSpan.FromSeconds(4);
-        timeout = TimeSpan.FromSeconds(30);
         if (!HandlerEvent.WaitOne(timeout))
         {
             throw new Exception("TimedOut");
