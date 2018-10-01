@@ -124,10 +124,7 @@ from {table}
 where
     MessageIdLower = lower(@MessageId)";
 
-            var parameter = command.CreateParameter();
-            parameter.ParameterName = "MessageId";
-            parameter.Value = messageId;
-            command.Parameters.Add(parameter);
+            command.AddParameter("MessageId", messageId);
 
             return command;
         }

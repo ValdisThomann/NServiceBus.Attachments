@@ -93,16 +93,8 @@ from {table}
 where
     NameLower = lower(@Name) and
     MessageIdLower = lower(@MessageId)";
-            var nameParameter = command.CreateParameter();
-            nameParameter.ParameterName = "Name";
-            nameParameter.Value = name;
-            nameParameter.DbType = DbType.String;
-            command.Parameters.Add(nameParameter);
-            var messageIdParameter = command.CreateParameter();
-            messageIdParameter.ParameterName = "MessageId";
-            messageIdParameter.Value = messageId;
-            messageIdParameter.DbType = DbType.String;
-            command.Parameters.Add(messageIdParameter);
+            command.AddParameter("Name", name);
+            command.AddParameter("MessageId", messageId);
             return command;
         }
 

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Data;
 using System.Data.Common;
-using System.Data.SqlClient;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,27 +16,39 @@ static class SqlExtensions
         return dataReader.GetString(index);
     }
 
-    public static void AddParameter(this SqlCommand command, string name, string value)
+    public static void AddParameter(this DbCommand command, string name, string value)
     {
-        var parameter = command.Parameters.Add(name, SqlDbType.NVarChar);
-        if (value != null)
-        {
-            parameter.Value = value;
-        }
-        else
+        var parameter = command.CreateParameter();
+        parameter.ParameterName = name;
+        parameter.DbType = DbType.String;
+        if (value == null)
         {
             parameter.Value = DBNull.Value;
         }
+        else
+        {
+            parameter.Value = value;
+        }
+
+        command.Parameters.Add(parameter);
     }
 
-    public static void AddBinary(this SqlCommand command, string name, object value)
+    public static void AddBinary(this DbCommand command, string name, object value)
     {
-        command.Parameters.Add(name, SqlDbType.Binary, -1).Value = value;
+        var parameter = command.CreateParameter();
+        parameter.ParameterName = name;
+        parameter.DbType = DbType.Binary;
+        parameter.Value = value;
+        command.Parameters.Add(parameter);
     }
 
-    public static void AddParameter(this SqlCommand command, string name, DateTime value)
+    public static void AddParameter(this DbCommand command, string name, DateTime value)
     {
-        command.Parameters.Add(name, SqlDbType.DateTime2).Value = value;
+        var parameter = command.CreateParameter();
+        parameter.ParameterName = name;
+        parameter.DbType = DbType.DateTime2;
+        parameter.Value = value;
+        command.Parameters.Add(parameter);
     }
 
     // The reader needs to be executed with SequentialAccess to enable network streaming
