@@ -31,27 +31,27 @@ namespace NServiceBus.Attachments.Sql
         /// <summary>
         /// Reads the <see cref="AttachmentInfo"/> for all attachments of a specific message.
         /// </summary>
-        Task ReadAllMessageInfo(SqlConnection connection, SqlTransaction transaction, string messageId, Func<AttachmentInfo, Task> action, CancellationToken cancellation = default);
+        Task ReadAllMessageInfo(DbConnection connection, DbTransaction transaction, string messageId, Func<AttachmentInfo, Task> action, CancellationToken cancellation = default);
 
         /// <summary>
         /// Reads the <see cref="AttachmentInfo"/> for all attachments of a specific message.
         /// </summary>
-        Task<IReadOnlyCollection<AttachmentInfo>> ReadAllMessageInfo(SqlConnection connection, SqlTransaction transaction, string messageId, CancellationToken cancellation = default);
+        Task<IReadOnlyCollection<AttachmentInfo>> ReadAllMessageInfo(DbConnection connection, DbTransaction transaction, string messageId, CancellationToken cancellation = default);
 
         /// <summary>
         /// Reads the <see cref="AttachmentInfo"/> for all attachments.
         /// </summary>
-        Task ReadAllInfo(SqlConnection connection, SqlTransaction transaction, Func<AttachmentInfo, Task> action, CancellationToken cancellation = default);
+        Task ReadAllInfo(DbConnection connection, DbTransaction transaction, Func<AttachmentInfo, Task> action, CancellationToken cancellation = default);
 
         /// <summary>
         /// Reads the <see cref="AttachmentInfo"/> for all attachments.
         /// </summary>
-        Task<IReadOnlyCollection<AttachmentInfo>> ReadAllInfo(SqlConnection connection, SqlTransaction transaction, CancellationToken cancellation = default);
+        Task<IReadOnlyCollection<AttachmentInfo>> ReadAllInfo(DbConnection connection, DbTransaction transaction, CancellationToken cancellation = default);
 
         /// <summary>
         /// Deletes all attachments.
         /// </summary>
-        Task DeleteAllAttachments(SqlConnection connection, SqlTransaction transaction, CancellationToken cancellation = default);
+        Task DeleteAllAttachments(DbConnection connection, DbTransaction transaction, CancellationToken cancellation = default);
 
         /// <summary>
         /// Deletes attachments older than <paramref name="dateTime"/>.

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Data.SqlClient;
+using System.Data.Common;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,7 +15,7 @@ namespace NServiceBus.Attachments.Sql
         /// <summary>
         /// Reads the <see cref="AttachmentInfo"/> for all attachments of a specific message.
         /// </summary>
-        public virtual async Task ReadAllMessageInfo(SqlConnection connection, SqlTransaction transaction, string messageId, Func<AttachmentInfo, Task> action, CancellationToken cancellation = default)
+        public virtual async Task ReadAllMessageInfo(DbConnection connection, DbTransaction transaction, string messageId, Func<AttachmentInfo, Task> action, CancellationToken cancellation = default)
         {
             Guard.AgainstNullOrEmpty(messageId, nameof(messageId));
             Guard.AgainstNull(connection, nameof(connection));
@@ -41,7 +41,7 @@ namespace NServiceBus.Attachments.Sql
         /// <summary>
         /// Reads the <see cref="AttachmentInfo"/> for all attachments of a specific message.
         /// </summary>
-        public virtual async Task<IReadOnlyCollection<AttachmentInfo>> ReadAllMessageInfo(SqlConnection connection, SqlTransaction transaction, string messageId, CancellationToken cancellation = default)
+        public virtual async Task<IReadOnlyCollection<AttachmentInfo>> ReadAllMessageInfo(DbConnection connection, DbTransaction transaction, string messageId, CancellationToken cancellation = default)
         {
             var list = new ConcurrentBag<AttachmentInfo>();
             await ReadAllMessageInfo(connection, transaction, messageId,
@@ -57,7 +57,7 @@ namespace NServiceBus.Attachments.Sql
         /// <summary>
         /// Reads the <see cref="AttachmentInfo"/> for all attachments.
         /// </summary>
-        public virtual async Task ReadAllInfo(SqlConnection connection, SqlTransaction transaction, Func<AttachmentInfo, Task> action, CancellationToken cancellation = default)
+        public virtual async Task ReadAllInfo(DbConnection connection, DbTransaction transaction, Func<AttachmentInfo, Task> action, CancellationToken cancellation = default)
         {
             Guard.AgainstNull(connection, nameof(connection));
             Guard.AgainstNull(action, nameof(action));
@@ -82,7 +82,7 @@ namespace NServiceBus.Attachments.Sql
         /// <summary>
         /// Reads the <see cref="AttachmentInfo"/> for all attachments.
         /// </summary>
-        public virtual async Task<IReadOnlyCollection<AttachmentInfo>> ReadAllInfo(SqlConnection connection, SqlTransaction transaction, CancellationToken cancellation = default)
+        public virtual async Task<IReadOnlyCollection<AttachmentInfo>> ReadAllInfo(DbConnection connection, DbTransaction transaction, CancellationToken cancellation = default)
         {
             var list = new ConcurrentBag<AttachmentInfo>();
             await ReadAllInfo(connection, transaction,
@@ -95,7 +95,7 @@ namespace NServiceBus.Attachments.Sql
             return list;
         }
 
-        SqlCommand GetReadInfosCommand(SqlConnection connection, SqlTransaction transaction)
+        DbCommand GetReadInfosCommand(DbConnection connection, DbTransaction transaction)
         {
             var command = connection.CreateCommand();
             command.Transaction = transaction;
@@ -110,7 +110,7 @@ from {table}";
             return command;
         }
 
-        SqlCommand GetReadInfoCommand(SqlConnection connection, SqlTransaction transaction, string messageId)
+        DbCommand GetReadInfoCommand(DbConnection connection, DbTransaction transaction, string messageId)
         {
             var command = connection.CreateCommand();
             command.Transaction = transaction;
@@ -123,7 +123,11 @@ select
 from {table}
 where
     MessageIdLower = lower(@MessageId)";
-            command.AddParameter("MessageId", messageId);
+
+            var parameter = command.CreateParameter();
+            parameter.ParameterName = "MessageId";
+            parameter.Value = messageId;
+            command.Parameters.Add(parameter);
 
             return command;
         }
